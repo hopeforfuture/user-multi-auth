@@ -1,0 +1,5 @@
+Admin Login URL: http://localhost:8000/admin (admin@example.org/test123)
+Customer Login URL: http://localhost:8000/customer (schamberger.lupe@example.net/test123)
+Lead Login URL: http://localhost:8000/lead (sabbott@example.com/test123)
+
+SQL File Name:- multi-auth.sql
