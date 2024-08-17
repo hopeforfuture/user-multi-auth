@@ -51,6 +51,7 @@ class AdminController extends Controller
         $perPage     = config('constants.options.per_page');
         $customers   = Customer::getCustomerList(true);
         $queryFilter = $request->except('page');
+        $options     = array(1=>'New', 2=>'Contacted', 3=>'Qualified', 4=>'Lost');
 
         $queryLead = Lead::with('customer');
         if(!empty($cust_id)) {
@@ -63,21 +64,25 @@ class AdminController extends Controller
             $queryLead->where('email', 'like', '%'.$queryFilter['email'].'%');
         }
         if(!empty($queryFilter['phone'])) {
-            $queryLead->where('phone', $queryFilter['phone']);
+            $queryLead->where('phone', 'like', '%'.$queryFilter['phone'].'%');
         }
         if(!empty($queryFilter['customer_id'])) {
             $queryLead->whereIn('customer_id', $queryFilter['customer_id']);
         }
+        if(!empty($queryFilter['status'])) {
+            $queryLead->where('status', $queryFilter['status']);
+        }
         $leads    = $queryLead->orderBy('id', 'desc')->paginate($perPage);
         $pageNo   = $request->query('page') ?? 1;
         $start    = ($pageNo - 1) * $perPage + 1;
-        return view('admin.lead-list', ['leads' => $leads, 'userdata' => $userdata, 'i' => $start, 'customers' => $customers]);
+        return view('admin.lead-list', ['leads' => $leads, 'userdata' => $userdata, 'i' => $start, 'customers' => $customers, 'options' => $options]);
     }
 
     public function edit_lead(Request $request, $id) {
         $lead      = Lead::with('customer')->find($id);
         $userdata  = $this->getUserData();
         $customers = Customer::getCustomerList();
+        $options   = array(1=>'New', 2=>'Contacted', 3=>'Qualified', 4=>'Lost');
         
         if($request->isMethod('post')) {
             $validator = Validator::make($request->all(), [
@@ -86,6 +91,7 @@ class AdminController extends Controller
                 'phone'       => 'required',
                 'address'     => 'required',
                 'customer_id' => 'required',
+                'status'      => 'required',
             ]);
             if($validator->fails()) {
                 return redirect()->back()->withErrors($validator->errors())->withInput();
@@ -95,7 +101,7 @@ class AdminController extends Controller
                 return redirect()->route('admin.lead.list')->with('message', 'Record updated successfully.')->with("message_type","success");
             }
         }
-        return view('admin.edit_lead', ['lead' => $lead, 'userdata' => $userdata, 'customers' => $customers]);
+        return view('admin.edit_lead', ['lead' => $lead, 'userdata' => $userdata, 'customers' => $customers, 'options'=>$options]);
     }
 
     public function view_lead(Request $request, $id) {

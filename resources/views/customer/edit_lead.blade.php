@@ -41,6 +41,18 @@
     </tr>
 
     <tr>
+      <td>Status</td>
+      <td>
+        <select name="status" id="status">
+          <option value="">---Select Status---</option>
+          @foreach ($options as $k=>$v)
+          <option @if($lead->status == $k) selected @endif value="{{ $k }}">{{ $v }}</option>  
+          @endforeach
+        </select>
+      </td>
+    </tr>
+
+    <tr>
       <td colspan="2" style="text-align: center;">
         <button class="btn btn-info" type="submit">Update</button>
         <a class="btn btn-info" href="{{ route('customer.lead') }}">Back</a>

@@ -26,5 +26,10 @@
       <td>Address</td>
       <td>{{ $lead['address'] }}</td>
     </tr>
+
+    <tr>
+      <td>Status</td>
+      <td>{{ $status }}</td>
+    </tr>
   </table>
 @endsection

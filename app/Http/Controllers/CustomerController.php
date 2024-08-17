@@ -73,9 +73,9 @@ class CustomerController extends Controller
     public function leads(Request $request) {
         $userdata = $this->getUserData();
         $perPage  = config('constants.options.per_page');
-        $leads = Lead::with('customer')->where('customer_id', $userdata['id'])->orderBy('id', 'desc')->paginate($perPage);
-        $pageNo = $request->query('page') ?? 1;
-        $start  = ($pageNo - 1) * $perPage + 1;
+        $leads    = Lead::with('customer')->where('customer_id', $userdata['id'])->orderBy('id', 'desc')->paginate($perPage);
+        $pageNo   = $request->query('page') ?? 1;
+        $start    = ($pageNo - 1) * $perPage + 1;
         return view('customer.lead-list', ['leads' => $leads, 'userdata' => $userdata, 'i' => $start]);
     }
 
@@ -96,8 +96,9 @@ class CustomerController extends Controller
     }
 
     public function edit_lead(Request $request, $id) {
-        $lead = Lead::find($id);
+        $lead     = Lead::find($id);
         $userdata = $this->getUserData();
+        $options  = array(1=>'New', 2=>'Contacted', 3=>'Qualified', 4=>'Lost');
         if($lead->customer_id != $userdata['id']) {
             return redirect()->route('customer.lead')->with('message', 'Unauthorized access prevented.')->with("message_type","danger");
         }
@@ -107,6 +108,7 @@ class CustomerController extends Controller
                 'email'     => 'required|email|unique:leads,email,'.$id,
                 'phone'     => 'required',
                 'address'   => 'required',
+                'status'    => 'required',
             ]);
             if($validator->fails()) {
                 return redirect()->back()->withErrors($validator->errors())->withInput();
@@ -116,11 +118,13 @@ class CustomerController extends Controller
                 return redirect()->route('customer.lead')->with('message', 'Record updated successfully.')->with("message_type","success");
             }
         }
-        return view('customer.edit_lead', ['lead' => $lead, 'userdata' => $userdata]);
+        return view('customer.edit_lead', ['lead' => $lead, 'userdata' => $userdata, 'options'=>$options]);
     }
 
     public function view_lead(Request $request, $id) {
         $lead = Lead::find($id);
+        //dd($lead->toArray());
+        $status = $lead->status_text;
         $userdata = $this->getUserData();
         if(empty($lead)) {
             return redirect()->route('customer.lead')->with('message', 'No data found.')->with("message_type","danger");
@@ -129,7 +133,7 @@ class CustomerController extends Controller
             return redirect()->route('customer.lead')->with('message', 'Unauthorized access prevented.')->with("message_type","danger");
         }
 
-        return view('customer.view_lead', ['lead' => $lead->toArray(), 'userdata' => $userdata]);
+        return view('customer.view_lead', ['lead' => $lead->toArray(), 'userdata' => $userdata, 'status'=>$status]);
     }
 
     private function getUserData() {

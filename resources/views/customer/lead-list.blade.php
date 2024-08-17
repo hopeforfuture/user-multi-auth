@@ -9,6 +9,7 @@
     <th>Name</th>
     <th>Email</th>
     <th>Phone</th>
+    <th>Status</th>
     <th>Action</th>
   </tr>
 
@@ -18,6 +19,7 @@
       <td>{{ $lead->name }}</td>
       <td>{{ $lead->email }}</td>
       <td>{{  $lead->phone ?? '-' }}</td>
+      <td>{{  $lead->status_text }}</td>
       <td>
         <a href="{{ route('customer.edit.lead', [$lead->id]) }}"><button class="btn btn-info">EDIT</button></a> 
         <form action="{{ route('customer.delete.lead', [$lead->id] ) }}" method="post">
@@ -33,7 +35,7 @@
 
   @if (!empty($leads))
   <tr>
-    <td colspan="5" style="text-align: right;">
+    <td colspan="6" style="text-align: right;">
     {!! $leads->links('vendor.pagination.custom') !!}
     </td>
   </tr>

@@ -31,5 +31,10 @@
       <td>Address</td>
       <td>{{ $lead->address }}</td>
     </tr>
+
+    <tr>
+      <td>Status</td>
+      <td>{{ $lead->status_text }}</td>
+    </tr>
   </table>
 @endsection

@@ -14,14 +14,17 @@
           <label for="name">Name</label>
           <input type="text" name="name" id="name" value="{{ request()->query('name') ?? '' }}">
         </div>
+
         <div class="input-item">
           <label for="email">Email</label>
           <input type="email" name="email" id="email" value="{{ request()->query('email') ?? '' }}">
         </div>
+
         <div class="input-item" style="margin-bottom: 5px;">
           <label for="phone">Phone</label>
           <input type="text" name="phone" id="phone" value="{{ request()->query('phone') ?? '' }}">
         </div>
+
         <div class="input-item">
           <label for="phone" style="vertical-align: top;">Customer</label>
           <select name="customer_id[]" id="customer_id" multiple>
@@ -30,6 +33,16 @@
             <option @if((!empty(request()->query('customer_id'))) && (in_array($id, request()->query('customer_id')))) selected @endif value="{{ $id }}">{{ $name }}</option>  
             @endforeach
           </select>
+        </div>
+
+        <div class="input-item">
+          <label for="phone" style="vertical-align: top;">Customer</label>
+          <select name="status" id="status">
+          <option value="">---Select Status---</option>
+          @foreach ($options as $k=>$v)
+          <option @if(request()->query('status') == $k) selected @endif value="{{ $k }}">{{ $v }}</option>  
+          @endforeach
+        </select>
         </div>
 
         <div style="clear: both;position:relative;left:942px;">
