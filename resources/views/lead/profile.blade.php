@@ -31,5 +31,10 @@
       <td>Customer Name</td>
       <td>{{ $leaddata['customer']['name'] ?? '-' }}</td>
     </tr>
+
+    <tr>
+      <td>Status</td>
+      <td>{{ $status }}</td>
+    </tr>
   </table>
 @endsection

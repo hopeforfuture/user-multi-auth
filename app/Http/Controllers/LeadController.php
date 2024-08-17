@@ -66,8 +66,9 @@ class LeadController extends Controller
 
     public function profile_view(Request $request) {
         $userdata = $this->getUserData();
-        $leaddata = Lead::where('id', $userdata['id'])->with('customer')->first()->toArray();
-        return view('lead.profile', ['leaddata' => $leaddata, 'userdata' => $userdata]);
+        $leaddata = Lead::where('id', $userdata['id'])->with('customer')->first();
+        $status   = $leaddata->status_text;
+        return view('lead.profile', ['leaddata' => $leaddata->toArray(), 'userdata' => $userdata, 'status' => $status]);
     }
 
     private function getUserData() {
