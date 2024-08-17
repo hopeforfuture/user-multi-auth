@@ -52,6 +52,7 @@ class AdminController extends Controller
         $customers   = Customer::getCustomerList(true);
         $queryFilter = $request->except('page');
         $options     = array(1=>'New', 2=>'Contacted', 3=>'Qualified', 4=>'Lost');
+        $adminPath   = true;
 
         $queryLead = Lead::with('customer');
         if(!empty($cust_id)) {
@@ -75,7 +76,11 @@ class AdminController extends Controller
         $leads    = $queryLead->orderBy('id', 'desc')->paginate($perPage);
         $pageNo   = $request->query('page') ?? 1;
         $start    = ($pageNo - 1) * $perPage + 1;
-        return view('admin.lead-list', ['leads' => $leads, 'userdata' => $userdata, 'i' => $start, 'customers' => $customers, 'options' => $options]);
+        return view('admin.lead-list', [
+                'leads' => $leads, 'userdata' => $userdata, 'i' => $start, 
+                'customers' => $customers, 'options' => $options, 'adminPath' => $adminPath
+            ]
+        );
     }
 
     public function edit_lead(Request $request, $id) {

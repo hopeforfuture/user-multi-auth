@@ -71,12 +71,29 @@ class CustomerController extends Controller
     }
 
     public function leads(Request $request) {
-        $userdata = $this->getUserData();
-        $perPage  = config('constants.options.per_page');
-        $leads    = Lead::with('customer')->where('customer_id', $userdata['id'])->orderBy('id', 'desc')->paginate($perPage);
+        $userdata    = $this->getUserData();
+        $perPage     = config('constants.options.per_page');
+        //$leads    = Lead::with('customer')->where('customer_id', $userdata['id'])->orderBy('id', 'desc')->paginate($perPage);
+        $queryLead   = Lead::with('customer');
+        $queryFilter = $request->except('page');
+        
+        if(!empty($queryFilter['name'])) {
+            $queryLead->where('name', 'like', '%'.$queryFilter['name'].'%');
+        }
+        if(!empty($queryFilter['email'])) {
+            $queryLead->where('email', 'like', '%'.$queryFilter['email'].'%');
+        }
+        if(!empty($queryFilter['phone'])) {
+            $queryLead->where('phone', 'like', '%'.$queryFilter['phone'].'%');
+        }
+        if(!empty($queryFilter['status'])) {
+            $queryLead->where('status', $queryFilter['status']);
+        }
+        $leads    = $queryLead->where('customer_id', $userdata['id'])->orderBy('id', 'desc')->paginate($perPage);
         $pageNo   = $request->query('page') ?? 1;
         $start    = ($pageNo - 1) * $perPage + 1;
-        return view('customer.lead-list', ['leads' => $leads, 'userdata' => $userdata, 'i' => $start]);
+        $options  = array(1=>'New', 2=>'Contacted', 3=>'Qualified', 4=>'Lost');
+        return view('customer.lead-list', ['leads' => $leads, 'userdata' => $userdata, 'i' => $start, 'customerPath' => true, 'options' => $options]);
     }
 
     public function lead_delete(Request $request, $id) {
@@ -123,7 +140,6 @@ class CustomerController extends Controller
 
     public function view_lead(Request $request, $id) {
         $lead = Lead::find($id);
-        //dd($lead->toArray());
         $status = $lead->status_text;
         $userdata = $this->getUserData();
         if(empty($lead)) {

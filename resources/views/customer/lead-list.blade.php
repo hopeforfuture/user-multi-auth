@@ -1,6 +1,7 @@
 @extends('customer.layout-dashboard')
 
 @section('content')
+@include('partials.lead_filter')
 <h3>List of Leads</h3>
 
 <table id="customers">
