@@ -76,7 +76,7 @@ class CustomerController extends Controller
         //$leads    = Lead::with('customer')->where('customer_id', $userdata['id'])->orderBy('id', 'desc')->paginate($perPage);
         $queryLead   = Lead::with('customer');
         $queryFilter = $request->except('page');
-        
+
         if(!empty($queryFilter['name'])) {
             $queryLead->where('name', 'like', '%'.$queryFilter['name'].'%');
         }
@@ -93,7 +93,7 @@ class CustomerController extends Controller
         $pageNo   = $request->query('page') ?? 1;
         $start    = ($pageNo - 1) * $perPage + 1;
         $options  = array(1=>'New', 2=>'Contacted', 3=>'Qualified', 4=>'Lost');
-        return view('customer.lead-list', ['leads' => $leads, 'userdata' => $userdata, 'i' => $start, 'customerPath' => true, 'options' => $options]);
+        return view('customer.lead-list', ['leads' => $leads, 'userdata' => $userdata, 'i' => $start, 'options' => $options]);
     }
 
     public function lead_delete(Request $request, $id) {

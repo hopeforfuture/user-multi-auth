@@ -78,7 +78,7 @@ class AdminController extends Controller
         $start    = ($pageNo - 1) * $perPage + 1;
         return view('admin.lead-list', [
                 'leads' => $leads, 'userdata' => $userdata, 'i' => $start, 
-                'customers' => $customers, 'options' => $options, 'adminPath' => $adminPath
+                'customers' => $customers, 'options' => $options
             ]
         );
     }

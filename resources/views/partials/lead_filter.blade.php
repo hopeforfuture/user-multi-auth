@@ -11,11 +11,11 @@
 @php
   $action = '';
   $isCust = $isAdmin = FALSE;
-  if(!empty($adminPath)) {
+  if(request()->routeIs('admin.lead.list')) {
     $action = route('admin.lead.list');
     $isAdmin = true;
   }
-  if(!empty($customerPath)) {
+  if(request()->routeIs('customer.lead')) {  
     $action = route('customer.lead');
     $isCust = true;
   }
